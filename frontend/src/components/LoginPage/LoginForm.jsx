@@ -4,7 +4,8 @@ import * as yup from 'yup';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import routes from '@hexlet/chat-server/src/routes';
+import routes from '../../routes/routes';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 
 const LoginPage = () => {
   const validateSchema = yup.object().shape({
@@ -12,18 +13,21 @@ const LoginPage = () => {
     password: yup.string().required(),
   });
   const navigate = useNavigate();
+  const authUser = useAuth();
   return (
     <Formik
-      initialValues={{
-        name: '',
-        password: '',
-      }}
+      initialValues={
+    {
+      name: '',
+      password: '',
+    }
+}
       validate={validateSchema}
       onSubmit={async (values) => {
         // eslint-disable-next-line no-empty
         try {
           const res = await axios.post(routes.loginPath(), values);
-          console.log(res.data);
+          authUser.logIn(res.data);
           navigate('/');
         } catch (err) {
           console.log(err);
@@ -64,16 +68,10 @@ const LoginPage = () => {
               value={values.password}
               placeholder="Пароль"
             />
-            <label className="form-label" htmlFor="password">
-              Пароль
-            </label>
+            <label className="form-label" htmlFor="password">Пароль</label>
             {errors.password && touched.password && errors.password}
           </div>
-          <button
-            type="submit"
-            className="w-100 mb-3 btn btn-outline-primary"
-            disabled={isSubmitting}
-          >
+          <button type="submit" className="w-100 mb-3 btn btn-outline-primary" disabled={isSubmitting}>
             Войти
           </button>
         </form>

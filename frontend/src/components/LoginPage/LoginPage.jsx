@@ -12,19 +12,16 @@ const LoginPage = () => (
         <Card className="shadow-sm">
           <Card.Body className="p-5 row colomn-login">
             <Col className="col-12 col-md-6 d-flex align-items-center justify-content-center">
-              <img
-                src={imageAvatar}
-                className="rounded-circle"
-                width="200px"
-                alt=""
-              />
+              <img src={imageAvatar} className="rounded-circle" width="200px" alt="" />
             </Col>
             <LoginForm />
           </Card.Body>
           <Card.Footer className="p-4">
             <div className="text-center">
-              <span>Нет аккаунта?</span>
-              <Link to="/register">Регистрация</Link>
+              <span>
+                Нет аккаунта?
+              </span>
+              <Link to="/signup">Регестрация</Link>
             </div>
           </Card.Footer>
         </Card>
