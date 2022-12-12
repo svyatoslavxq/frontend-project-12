@@ -1,28 +1,51 @@
+import React from 'react';
+import i18next from 'i18next';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
+import { Provider } from 'react-redux';
+import filter from 'leo-profanity';
+import AppInit from './components/initApp';
+import store from './slices/store';
+import resources from './locales/index';
+import { AddMessage } from './slices/messageSlice';
 import {
-  Routes, Route,
-} from 'react-router-dom';
-import HomePage from './components/HomePage/HomePage';
-import LoginPage from './components/LoginPage/LoginPage';
-import RegisterPage from './components/RegisterPage/RegisterPage';
-import NotFoundPage from './components/NotFoundPage';
-import { AuthProvider } from './contexts/AuthContext.jsx';
-import { SocketProvider } from './contexts/SocketContext.jsx';
-import Nav from './Nav';
-// eslint-disable-next-line react-hooks/rules-of-hooks
-const App = ({ socket }) => (
-  <div className="d-flex flex-column h-100">
-    <SocketProvider value={{ socket }}>
-      <AuthProvider>
-        <Nav />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<RegisterPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </AuthProvider>
-    </SocketProvider>
-  </div>
-);
+  AddChannel,
+  removeChannel,
+  renameChannel,
+} from './slices/channelsSlice';
+
+const App = async (socket) => {
+  const i18n = i18next.createInstance();
+  await i18n.use(initReactI18next).init({
+    lng: 'ru',
+    resources,
+    interpolation: {
+      escapeValue: false,
+    },
+  });
+
+  socket.on('newMessage', (messageWithId) => {
+    store.dispatch(AddMessage(messageWithId));
+  });
+  socket.on('newChannel', (channelWithId) => {
+    store.dispatch(AddChannel(channelWithId));
+  });
+  socket.on('removeChannel', (channelWithId) => {
+    store.dispatch(removeChannel(channelWithId));
+  });
+  socket.on('renameChannel', (channelWithId) => {
+    store.dispatch(renameChannel(channelWithId));
+  });
+
+  filter.add(filter.getDictionary('en'));
+  filter.add(filter.getDictionary('ru'));
+
+  return (
+    <I18nextProvider i18n={i18n}>
+      <Provider store={store}>
+        <AppInit socket={socket} />
+      </Provider>
+    </I18nextProvider>
+  );
+};
 
 export default App;
