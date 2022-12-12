@@ -10,8 +10,5 @@ start-frontend:
 start-backend:
 	npx start-server -p 5001
 
-build:
-	npm run build
-
 start:
 	make start-backend & make start-frontend
