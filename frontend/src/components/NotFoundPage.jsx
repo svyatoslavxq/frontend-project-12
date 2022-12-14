@@ -1,18 +1,20 @@
-import { Navbar, Container, Button } from 'react-bootstrap';
+import { React } from 'react';
+import Image from 'react-bootstrap/Image';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../contexts/AuthContext';
+import imageNotFound from '../assets/404-page.svg';
 
-const Nav = () => {
-  const auth = useAuth();
+const NotFoundPage = () => {
   const { t } = useTranslation();
   return (
-    <Navbar className="shadow-sm navbar navbar-light">
-      <Container className="container">
-        <a className="navbar-brand" href="/">Hexlet Chat</a>
-        {auth.loggedIn ? <Button onClick={() => auth.logOut()} className="btn-primary">{t('logOut')}</Button> : null}
-      </Container>
-    </Navbar>
+    <div className="text-center">
+      <Image alt="Страница не найдена" className="img-fluid h-25" src={imageNotFound} />
+      <h1 className="h4 text-muted">{t('notFound.message')}</h1>
+      <p className="text-muted">
+        {t('notFound.youCan')}
+        <a href="/">{t('notFound.mainPage')}</a>
+      </p>
+    </div>
   );
 };
 
-export default Nav;
+export default NotFoundPage;

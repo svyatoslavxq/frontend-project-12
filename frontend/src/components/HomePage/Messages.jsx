@@ -1,7 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import {
-  React, useRef, useEffect,
-} from 'react';
+import { React, useRef, useEffect } from 'react';
 import { Formik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
@@ -28,7 +26,7 @@ const Messages = ({ message, currectChannelID, correctChatName }) => {
     scrollToBottom();
   });
   const textSchema = yup.object().shape({
-    text: yup.string(),
+    text: yup.string().required(''),
   });
 
   return (
@@ -40,7 +38,6 @@ const Messages = ({ message, currectChannelID, correctChatName }) => {
   }
       validationSchema={textSchema}
       onSubmit={async (values, { resetForm }) => {
-      // eslint-disable-next-line no-empty
         try {
           const messageText = filter.clean(values.text);
           const messageNew = {
@@ -73,16 +70,15 @@ const Messages = ({ message, currectChannelID, correctChatName }) => {
               <span className="text-muted">{t('messagesQuantity.counter.count', { count: message.length })}</span>
             </div>
             <div id="messages-box" className="chat-messages overflow-auto px-5 ">
-              <div className="text-break mb-2">
-                {message?.map((item) => (
-                  <div key={item.id} className="text-break mb-2">
-                    <b>{item.username}</b>
-                    :
-                    {' '}
-                    {item.text}
-                  </div>
-                ))}
-              </div>
+              {message?.map((item) => (
+                <div key={item.id} className="text-break mb-2">
+                  <b>{item.username}</b>
+                  :
+                  {' '}
+                  {item.text}
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
             </div>
             <div className="mt-auto px-5 py-3">
               <form className="py-1 border rounded-2" onSubmit={handleSubmit}>
@@ -94,6 +90,7 @@ const Messages = ({ message, currectChannelID, correctChatName }) => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.text}
+                    aria-label="Новое сообщение"
                     placeholder={t('messageForm')}
                   />
                   {errors.text && touched.text && errors.text}
