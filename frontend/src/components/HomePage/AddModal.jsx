@@ -28,7 +28,7 @@ const AddModal = () => {
   useEffect(() => {
     inputRef.current.focus();
   }, []);
-  const ChannelValidate = yup.object().shape({
+  const channelValidate = yup.object().shape({
     nameChannel: yup
       .string()
       .required(t('modal.required'))
@@ -43,12 +43,12 @@ const AddModal = () => {
         nameChannel: '',
       }
   }
-      validationSchema={ChannelValidate}
+      validationSchema={channelValidate}
       onSubmit={(values) => {
         try {
           setValidationError(null);
           const newChannel = {
-            id: _.uniqueId(), name: values.nameChannel, author: auth.getUserName(), removable: true,
+            name: values.nameChannel,
           };
           soc.addNewChannel(newChannel);
           successToast(t('addChannelToast'));

@@ -7,8 +7,8 @@ import filter from 'leo-profanity';
 import AppInit from './components/initApp';
 import store from './slices/store';
 import resources from './locales/index';
-import { AddMessage } from './slices/messageSlice';
-import { AddChannel, removeChannel, renameChannel } from './slices/channelsSlice';
+import { addMessage } from './slices/messageSlice';
+import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
 
 const rollbarConfig = {
   accessToken: process.env.POST_CLIENT_ITEM_ACCESS_TOKEN,
@@ -32,10 +32,10 @@ const App = async (socket) => {
     });
 
   socket.on('newMessage', (messageWithId) => {
-    store.dispatch(AddMessage(messageWithId));
+    store.dispatch(addMessage(messageWithId));
   });
   socket.on('newChannel', (channelWithId) => {
-    store.dispatch(AddChannel(channelWithId));
+    store.dispatch(addChannel(channelWithId));
   });
   socket.on('removeChannel', (channelWithId) => {
     store.dispatch(removeChannel(channelWithId));
