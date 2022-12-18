@@ -8,10 +8,10 @@ import * as yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { Form, Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal } from '../../slices/modalSlice';
-import { selectors } from '../../slices/channelsSlice';
-import { useSocket } from '../../contexts/SocketContext';
-import { useToastify } from '../../contexts/ToastifyContext';
+import { closeModal } from '../../../slices/modalSlice';
+import { namesChannelsSelector } from '../../../slices/channelsSlice';
+import { useApi } from '../../../contexts/SocketContext';
+import { useToastify } from '../../../contexts/ToastifyContext';
 
 const AddModal = () => {
   const { successToast } = useToastify();
@@ -19,19 +19,18 @@ const AddModal = () => {
   const dispatch = useDispatch();
   const inputRef = useRef();
   const [validationError, setValidationError] = useState('');
-  const soc = useSocket();
-  const allChannels = useSelector((state) => selectors.selectAll(state));
-  const namesChannels = allChannels.map((it) => it.name);
+  const soc = useApi();
+  const namesChannels = useSelector(namesChannelsSelector);
   useEffect(() => {
     inputRef.current.focus();
   }, []);
   const channelValidate = yup.object().shape({
     nameChannel: yup
       .string()
-      .required(t('modal.required'))
-      .min(3, t('modal.nameLenght'))
-      .max(20, t('modal.nameLenght'))
-      .notOneOf(namesChannels, t('modal.duplicate')),
+      .required('modal.required')
+      .min(3, 'modal.nameLenght')
+      .max(20, 'modal.nameLenght')
+      .notOneOf(namesChannels, 'modal.duplicate'),
   });
   return (
     <Formik
@@ -80,7 +79,7 @@ const AddModal = () => {
                 />
                 <Form.Label className="visually-hidden" htmlFor="nameChannel">{t('modal.name')}</Form.Label>
                 <Form.Control.Feedback type="invalid" tooltip placement="right">
-                  {errors.nameChannel ? errors.nameChannel : null}
+                  {errors.nameChannel ? (t(errors.nameChannel)) : null}
                 </Form.Control.Feedback>
                 <div className="invalid-fb">{t(validationError)}</div>
               </Form.Group>

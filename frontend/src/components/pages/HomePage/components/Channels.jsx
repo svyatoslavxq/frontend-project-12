@@ -5,16 +5,17 @@ import {
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { openModal } from '../../slices/modalSlice';
-import { changeChannelID } from '../../slices/channelsSlice';
+import { openModal } from '../../../../slices/modalSlice';
+import { changeChannelID, channelsLoading } from '../../../../slices/channelsSlice';
 import RemoveModal from './RemoveModal';
 import RenameModal from './RenameModal';
-import AddModal from './AddModal';
+import AddModal from '../AddModal';
 
 const Channels = ({ channels, currectChannelID }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { type } = useSelector((store) => store.modal);
+  const loadingStatus = useSelector(channelsLoading);
   const classButton = 'w-100 rounded-0 text-start btn text-truncate btn-light';
   const activeClassButton = 'w-100 rounded-0 text-start btn text-truncate btn-secondary shadow-none';
   const classBtnGroup = 'flex-grow-0 dropdown-toggle dropdown-toggle-split btn noborder-btn btn-light';
@@ -34,7 +35,7 @@ const Channels = ({ channels, currectChannelID }) => {
         </Button>
       </div>
       <ul className="nav flex-column nav-pills nav-fill px-2">
-        {channels.map((item) => (
+        {loadingStatus === 'loading' ? <div>Loading...</div> : channels.map((item) => (
           <li key={item.id} className="nav-item w-100">
             <ButtonGroup className="d-flex dropdown btn-group channelsBtn">
               <Button

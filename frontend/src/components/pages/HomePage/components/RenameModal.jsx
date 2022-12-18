@@ -8,17 +8,17 @@ import {
   FloatingLabel, Form, Button, Modal,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal } from '../../slices/modalSlice';
-import { selectors } from '../../slices/channelsSlice';
-import { useSocket } from '../../contexts/SocketContext';
-import { useToastify } from '../../contexts/ToastifyContext';
+import { closeModal } from '../../../../slices/modalSlice';
+import { selectors } from '../../../../slices/channelsSlice';
+import { useApi } from '../../../../contexts/SocketContext';
+import { useToastify } from '../../../../contexts/ToastifyContext';
 
 const RenameModal = () => {
   const { successToast } = useToastify();
   const { t } = useTranslation();
   const inputRef = useRef();
   const dispatch = useDispatch();
-  const soc = useSocket();
+  const soc = useApi();
   const { item } = useSelector((store) => store.modal);
   const allChannels = useSelector((state) => selectors.selectAll(state));
   const namesChannels = allChannels.map((it) => it.name);
@@ -31,10 +31,10 @@ const RenameModal = () => {
   const validateRename = yup.object().shape({
     renameChannel: yup
       .string()
-      .required(t('modal.required'))
-      .min(3, t('modal.nameLenght'))
-      .max(20, t('modal.nameLenght'))
-      .notOneOf(namesChannels, t('modal.duplicate')),
+      .required('modal.required')
+      .min(3, 'modal.nameLenght')
+      .max(20, 'modal.nameLenght')
+      .notOneOf(namesChannels, 'modal.duplicate'),
   });
   return (
     <Formik
@@ -85,7 +85,7 @@ const RenameModal = () => {
                     className="mb-2"
                   />
                   <Form.Control.Feedback type="invalid" tooltip placement="right">
-                    {errors.renameChannel ? errors.renameChannel : null}
+                    {errors.renameChannel ? (t(errors.renameChannel)) : null}
                   </Form.Control.Feedback>
                   <div className="invalid-fb">{t(validationError)}</div>
                 </FloatingLabel>
