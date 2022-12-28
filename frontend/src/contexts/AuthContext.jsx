@@ -1,13 +1,23 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import {
-  React, createContext, useContext, useState,
+  React, createContext, useContext, useState, useCallback, useEffect,
 } from 'react';
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const userLog = JSON.parse(localStorage.getItem('userId'));
-  const [loggedIn, setLoggedIn] = useState(userLog ? { username: userLog.username } : null);
+  const [userData, setUserData] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(userData ? { username: userData.username } : null);
+
+  useEffect(() => {
+    try {
+      const data = JSON.parse(localStorage.getItem('userId'));
+      setUserData(data);
+      setLoggedIn({ username: data.username });
+    } catch {
+      setLoggedIn(null);
+    }
+  }, []);
 
   const logIn = (data) => {
     localStorage.setItem('userId', JSON.stringify(data));
@@ -20,23 +30,22 @@ export const AuthProvider = ({ children }) => {
   };
 
   const getUserName = () => {
-    if (userLog) {
-      return userLog.username;
+    if (userData) {
+      return userData.username;
     }
     return null;
   };
 
-  const getAuthToken = () => {
-    const currentUser = userLog;
-    if (currentUser && currentUser.token) {
-      return { Authorization: `Bearer ${currentUser.token}` };
+  const getAuthToken = useCallback(() => {
+    if (userData && userData.token) {
+      return { Authorization: `Bearer ${userData.token}` };
     }
     return {};
-  };
+  }, [userData]);
 
   return (
     <AuthContext.Provider value={{
-      loggedIn, logIn, logOut, getUserName, getAuthToken, userLog,
+      loggedIn, logIn, logOut, getUserName, getAuthToken, userData,
     }}
     >
       {children}

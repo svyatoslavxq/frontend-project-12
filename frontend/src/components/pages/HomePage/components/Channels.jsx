@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { React } from 'react';
+import { React, useEffect } from 'react';
 import {
   Button, Dropdown, ButtonGroup,
 } from 'react-bootstrap';
@@ -19,6 +19,13 @@ const Channels = ({ channels, currectChannelID }) => {
   const classButton = 'w-100 rounded-0 text-start btn text-truncate btn-light';
   const activeClassButton = 'w-100 rounded-0 text-start btn text-truncate btn-secondary shadow-none';
   const classBtnGroup = 'flex-grow-0 dropdown-toggle dropdown-toggle-split btn noborder-btn btn-light';
+
+  useEffect(() => {
+    if (!channels.find((x) => x.id === currectChannelID)) {
+      dispatch(changeCurrentChannelID(1));
+    }
+  }, [channels]);
+
   const changeCurrentID = (id) => {
     dispatch(changeCurrentChannelID(id));
   };
