@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import {
-  React, createContext, useContext, useState, useCallback, useEffect,
+  React, createContext, useContext, useState, useEffect,
 } from 'react';
 
 const AuthContext = createContext({});
@@ -36,12 +36,12 @@ export const AuthProvider = ({ children }) => {
     return null;
   };
 
-  const getAuthToken = useCallback(() => {
+  const getAuthToken = () => {
     if (userData && userData.token) {
       return { Authorization: `Bearer ${userData.token}` };
     }
     return {};
-  }, [userData]);
+  };
 
   return (
     <AuthContext.Provider value={{
