@@ -1,23 +1,21 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import {
-  React, createContext, useContext, useState, useEffect,
+  React, createContext, useContext, useState,
 } from 'react';
 
 const AuthContext = createContext({});
 
-export const AuthProvider = ({ children }) => {
-  const [userData, setUserData] = useState(null);
-  const [loggedIn, setLoggedIn] = useState(userData ? { username: userData.username } : null);
+const getUserData = () => {
+  try {
+    return JSON.parse(localStorage.getItem('userId'));
+  } catch {
+    return null;
+  }
+};
 
-  useEffect(() => {
-    try {
-      const data = JSON.parse(localStorage.getItem('userId'));
-      setUserData(data);
-      setLoggedIn({ username: data.username });
-    } catch {
-      setLoggedIn(null);
-    }
-  }, []);
+export const AuthProvider = ({ children }) => {
+  const userData = getUserData();
+  const [loggedIn, setLoggedIn] = useState(userData);
 
   const logIn = (data) => {
     localStorage.setItem('userId', JSON.stringify(data));

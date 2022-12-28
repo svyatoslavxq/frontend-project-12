@@ -67,6 +67,7 @@ const RegisterFrom = () => {
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.username}
+              aria-label={t('signUpPage.required')}
             />
             <Form.Label htmlFor="username">{t('signUpPage.username')}</Form.Label>
             <Form.Control.Feedback type="invalid" tooltip placement="right">
@@ -86,6 +87,7 @@ const RegisterFrom = () => {
               onBlur={handleBlur}
               value={values.password}
               isInvalid={(errors.password && touched.password) || authFailed}
+              aria-label={t('signUpPage.required')}
             />
             <Form.Label htmlFor="password">{t('signUpPage.password')}</Form.Label>
             <Form.Control.Feedback type="invalid" tooltip placement="right">
@@ -103,6 +105,7 @@ const RegisterFrom = () => {
               onChange={handleChange}
               value={values.confirmPassword}
               isInvalid={errors.confirmPassword || authFailed}
+              aria-label={t('signUpPage.required')}
             />
             <Form.Label htmlFor="confirmPassword">{t('signUpPage.confirmPassword')}</Form.Label>
             <Form.Control.Feedback type="invalid" tooltip placement="right">
