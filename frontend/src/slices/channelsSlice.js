@@ -27,6 +27,7 @@ const channelsAdapter = createEntityAdapter();
 const initialState = {
   ...channelsAdapter.getInitialState({
     status: 'idle',
+    startStatus: false,
     messages: [],
     error: null,
   }),
@@ -47,6 +48,21 @@ const channelsSlice = createSlice({
       id: payload.id,
       changes: { name: payload.name },
     }),
+    updateChannels: (state, { payload }) => ({
+      ...state,
+      activeChannelID: !payload.channels.find((x) => x.id === payload.currentChannelID)
+        ? 1 : state.activeChannelID,
+    }),
+    updateAfterRemove: (state, { payload }) => {
+      const { activeChannelID, currentChannelID } = payload;
+      if (activeChannelID === currentChannelID) {
+        return ({
+          ...state,
+          activeChannelID: 1,
+        });
+      }
+      return state;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -76,16 +92,20 @@ export const getActiveChannel = (state) => state.channels.activeChannelID;
 export const currentChatSelector = (state) => selectors
   .selectAll(state)
   .filter((channel) => channel.id === state.channels.activeChannelID);
-export const channelsLoading = (state) => state.channels.status;
+export const dataStatusSelector = (state) => state.channels.startStatus;
 export const channelsErrorSelector = (state) => state.channels.error;
 export const currentMessagesSelector = (state) => state.channels.messages.filter(
   (item) => item.channelId === state.channels.activeChannelID,
 );
+export const currentChannelsSelector = (state, item) => selectors.selectAll(state)
+  .find((it) => it.id === item);
 
 export const {
   addChannel,
   removeChannel,
   renameChannel,
   changeCurrentChannelID,
+  updateChannels,
+  updateAfterRemove,
 } = channelsSlice.actions;
 export default channelsSlice.reducer;

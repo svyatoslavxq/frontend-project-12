@@ -11,7 +11,7 @@ const NotFoundPage = () => {
       <h1 className="h4 text-muted">{t('notFound.message')}</h1>
       <p className="text-muted">
         {t('notFound.youCan')}
-        <a href="/frontend/src/routes">{t('notFound.mainPage')}</a>
+        <a href="/">{t('notFound.mainPage')}</a>
       </p>
     </div>
   );

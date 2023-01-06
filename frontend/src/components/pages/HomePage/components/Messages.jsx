@@ -8,16 +8,18 @@ import filter from 'leo-profanity';
 import { Button } from 'react-bootstrap';
 import { useAuth } from '../../../../contexts/AuthContext';
 import { useApi } from '../../../../contexts/SocketContext';
-import { channelsLoading, currentChatSelector, getData } from '../../../../slices/channelsSlice';
+import {
+  currentChatSelector,
+  getData,
+} from '../../../../slices/channelsSlice';
 
 const Messages = ({ messages, currentChannelID, currentChatName }) => {
   const { t } = useTranslation();
   const auth = useAuth();
-  const soc = useApi();
+  const { sendNewMessage } = useApi();
   const messagesEndRef = useRef(null);
   const currentChat = useSelector(currentChatSelector);
   const ref = useRef(null);
-  const loadingStatus = useSelector(channelsLoading);
   const { getAuthToken } = useAuth();
   const dispatch = useDispatch();
 
@@ -33,9 +35,6 @@ const Messages = ({ messages, currentChannelID, currentChatName }) => {
     scrollToBottom();
   }, [messages]);
 
-  useEffect(() => {
-    scrollToBottom();
-  });
   const textSchema = yup.object().shape({
     text: yup.string().required(''),
   });
@@ -56,7 +55,7 @@ const Messages = ({ messages, currentChannelID, currentChatName }) => {
             username: auth.getUserName(),
             text: messageText,
           };
-          soc.sendNewMessage(messageNew);
+          sendNewMessage(messageNew);
           dispatch(getData(getAuthToken()));
           resetForm();
         } catch (err) {
@@ -77,7 +76,7 @@ const Messages = ({ messages, currentChannelID, currentChatName }) => {
           <div className="d-flex flex-column h-100">
             <div className="bg-light mb-4 p-3 shadow-sm small">
               <p className="m-0">
-                <b>{loadingStatus === 'loading' ? `${t('loadingData')}` : `# ${currentChatName}`}</b>
+                <b>{!currentChatName ? `${t('loadingData')}` : `# ${currentChatName}`}</b>
               </p>
               <span className="text-muted">{t('messagesQuantity.counter.count', { count: messages.length })}</span>
             </div>

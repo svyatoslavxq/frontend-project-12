@@ -8,26 +8,27 @@ import {
   FloatingLabel, Form, Button, Modal,
 } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal } from '../../../../slices/modalSlice';
-import { selectors } from '../../../../slices/channelsSlice';
-import { useApi } from '../../../../contexts/SocketContext';
-import { useToastify } from '../../../../contexts/ToastifyContext';
+import { closeModal, modalSelector } from '../../../slices/modalSlice';
+import { currentChannelsSelector, namesChannelsSelector } from '../../../slices/channelsSlice';
+import { useApi } from '../../../contexts/SocketContext';
+import { useToastify } from '../../../contexts/ToastifyContext';
 
 const RenameModal = () => {
   const { successToast } = useToastify();
   const { t } = useTranslation();
   const inputRef = useRef();
   const dispatch = useDispatch();
-  const soc = useApi();
-  const { item } = useSelector((store) => store.modal);
-  const allChannels = useSelector((state) => selectors.selectAll(state));
-  const namesChannels = allChannels.map((it) => it.name);
-  const currentChannel = allChannels.find((it) => it.id === item);
+  const { fnRenameChannel } = useApi();
+  const { item } = useSelector(modalSelector);
+  const namesChannels = useSelector(namesChannelsSelector);
+  const currentChannel = useSelector((state) => currentChannelsSelector(state, item));
   const { id, name } = currentChannel;
   const [validationError, setValidationError] = useState('');
+
   useEffect(() => {
     inputRef.current.select();
   }, []);
+
   const validateRename = yup.object().shape({
     renameChannel: yup
       .string()
@@ -36,6 +37,9 @@ const RenameModal = () => {
       .max(20, 'modal.nameLenght')
       .notOneOf(namesChannels, 'modal.duplicate'),
   });
+
+  const closeRenameModal = () => dispatch(closeModal());
+
   return (
     <Formik
       initialValues={
@@ -48,7 +52,7 @@ const RenameModal = () => {
       // eslint-disable-next-line no-empty
         try {
           const { renameChannel } = values;
-          soc.fnRenameChannel({ id, name: renameChannel });
+          fnRenameChannel({ id, name: renameChannel });
           setValidationError(null);
 
           dispatch(closeModal());
@@ -64,7 +68,7 @@ const RenameModal = () => {
         handleChange,
         handleSubmit,
       }) => (
-        <Modal centered show onHide={() => dispatch(closeModal())}>
+        <>
           <Modal.Header closeButton>
             <Modal.Title>{t('modal.renameChannel')}</Modal.Title>
           </Modal.Header>
@@ -91,12 +95,12 @@ const RenameModal = () => {
                 </FloatingLabel>
               </Form.Group>
               <div className="d-flex justify-content-end">
-                <Button onClick={() => dispatch(closeModal())} className="me-2" variant="secondary">{t('modal.cancelButton')}</Button>
+                <Button onClick={closeRenameModal} className="me-2" variant="secondary">{t('modal.cancelButton')}</Button>
                 <Button onClick={handleSubmit} type="submit" variant="primary">{t('modal.addButton')}</Button>
               </div>
             </Form>
           </Modal.Body>
-        </Modal>
+        </>
       )}
     </Formik>
   );

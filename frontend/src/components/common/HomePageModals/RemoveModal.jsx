@@ -3,31 +3,28 @@ import { React } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal } from '../../../../slices/modalSlice';
-import { selectors, changeCurrentChannelID } from '../../../../slices/channelsSlice';
-import { useApi } from '../../../../contexts/SocketContext';
-import { useToastify } from '../../../../contexts/ToastifyContext';
+import { closeModal, modalSelector } from '../../../slices/modalSlice';
+import { currentChannelsSelector, updateAfterRemove } from '../../../slices/channelsSlice';
+import { useApi } from '../../../contexts/SocketContext';
+import { useToastify } from '../../../contexts/ToastifyContext';
 
 const RemoveModal = ({ currectChannelID }) => {
   const { successToast } = useToastify();
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const soc = useApi();
-  const { item } = useSelector((store) => store.modal);
+  const { deleteChannel } = useApi();
+  const { item } = useSelector(modalSelector);
 
-  const currentChannel = useSelector((state) => selectors.selectAll(state).find((it) => it.id === item));
+  const currentChannel = useSelector((state) => currentChannelsSelector(state, item));
 
-  const startChannelId = 1;
   const handleRemove = () => {
-    soc.deleteChannel(currentChannel);
+    deleteChannel(currentChannel);
     dispatch(closeModal());
     successToast(t('removeChannelToast'));
-    if (currectChannelID === currentChannel.id) {
-      dispatch(changeCurrentChannelID(startChannelId));
-    }
+    dispatch(updateAfterRemove({ currectChannelID, currentChannelID: currentChannel.id }));
   };
   return (
-    <Modal centered show onHide={() => dispatch(closeModal())}>
+    <>
       <Modal.Header closeButton>
         <Modal.Title>{t('modal.removeChannel')}</Modal.Title>
       </Modal.Header>
@@ -38,7 +35,7 @@ const RemoveModal = ({ currectChannelID }) => {
           <Button onClick={handleRemove} type="button" variant="danger">{t('modal.removeButton')}</Button>
         </div>
       </Modal.Body>
-    </Modal>
+    </>
   );
 };
 

@@ -13,6 +13,8 @@ import {
   channelsErrorSelector,
 } from '../../../slices/channelsSlice';
 import { useAuth } from '../../../contexts/AuthContext';
+import HomePageModals from '../../common/HomePageModals';
+import { modalSelector } from '../../../slices/modalSlice';
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -22,6 +24,7 @@ const HomePage = () => {
   const currentChat = useSelector(currentChatSelector);
   const currentMessages = useSelector(currentMessagesSelector);
   const channelsError = useSelector(channelsErrorSelector);
+  const { type } = useSelector(modalSelector);
 
   useEffect(() => {
     dispatch(getData(getAuthToken()));
@@ -36,8 +39,9 @@ const HomePage = () => {
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
-        <Channels channels={dataChannels} currectChannelID={currentChannelID} />
+        <Channels channels={dataChannels} currentChannelID={currentChannelID} />
         <Messages messages={currentMessages} currentChannelID={currentChannelID} currentChatName={currentChat[0]?.name} />
+        <HomePageModals type={type} currentChannelID={currentChannelID} />
       </div>
     </div>
   );

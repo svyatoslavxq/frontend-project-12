@@ -19,11 +19,13 @@ const AddModal = () => {
   const dispatch = useDispatch();
   const inputRef = useRef();
   const [validationError, setValidationError] = useState('');
-  const soc = useApi();
+  const { addNewChannel } = useApi();
   const namesChannels = useSelector(namesChannelsSelector);
+
   useEffect(() => {
     inputRef.current.focus();
   }, []);
+
   const channelValidate = yup.object().shape({
     nameChannel: yup
       .string()
@@ -46,7 +48,7 @@ const AddModal = () => {
           const newChannel = {
             name: values.nameChannel,
           };
-          soc.addNewChannel(newChannel);
+          addNewChannel(newChannel);
           successToast(t('addChannelToast'));
           dispatch(closeModal());
         } catch (err) {
@@ -60,7 +62,7 @@ const AddModal = () => {
         handleChange,
         handleSubmit,
       }) => (
-        <Modal centered show onHide={() => dispatch(closeModal())}>
+        <>
           <Modal.Header closeButton>
             <Modal.Title>{t('modal.addChannel')}</Modal.Title>
           </Modal.Header>
@@ -93,7 +95,7 @@ const AddModal = () => {
               </div>
             </Form>
           </Modal.Body>
-        </Modal>
+        </>
       )}
     </Formik>
   );
