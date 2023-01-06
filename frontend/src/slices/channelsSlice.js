@@ -24,6 +24,7 @@ export const getData = createAsyncThunk(
 );
 
 const channelsAdapter = createEntityAdapter();
+
 const initialState = {
   ...channelsAdapter.getInitialState({
     status: 'idle',
@@ -86,14 +87,18 @@ const channelsSlice = createSlice({
 export const selectors = channelsAdapter.getSelectors(
   (state) => state.channels,
 );
+
 export const getChannels = (state) => selectors.selectAll(state);
 export const namesChannelsSelector = (state) => selectors.selectAll(state).map((it) => it.name);
 export const getActiveChannel = (state) => state.channels.activeChannelID;
+
 export const currentChatSelector = (state) => selectors
   .selectAll(state)
   .filter((channel) => channel.id === state.channels.activeChannelID);
+
 export const dataStatusSelector = (state) => state.channels.startStatus;
 export const channelsErrorSelector = (state) => state.channels.error;
+
 export const currentMessagesSelector = (state) => state.channels.messages.filter(
   (item) => item.channelId === state.channels.activeChannelID,
 );

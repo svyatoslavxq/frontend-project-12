@@ -13,13 +13,16 @@ import { useAuth } from '../../../../contexts/AuthContext.jsx';
 const RegisterFrom = () => {
   const { t } = useTranslation();
   const [authFailed, setAuthFailed] = useState(false);
+
   const SignupSchema = yup.object().shape({
     username: yup.string().required('signUpPage.required').min(3, 'signUpPage.usernameLenght').max(20, 'signUpPage.usernameLenght'),
     password: yup.string().required('signUpPage.required').min(6, 'signUpPage.minPasswordLenght'),
     confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'signUpPage.passwordConErr'),
   });
+
   const navigate = useNavigate();
   const authUser = useAuth();
+
   return (
     <Formik
       initialValues={

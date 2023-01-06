@@ -7,6 +7,7 @@ import imageAvatarSg from '../../../assets/avatar_signup.jpg';
 
 const RegisterPage = () => {
   const { t } = useTranslation();
+
   return (
     <div className="container-fluid h-100">
       <Row className="row justify-content-center align-content-center h-100">

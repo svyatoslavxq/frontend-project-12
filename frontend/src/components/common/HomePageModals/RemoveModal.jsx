@@ -23,6 +23,7 @@ const RemoveModal = ({ currectChannelID }) => {
     successToast(t('removeChannelToast'));
     dispatch(updateAfterRemove({ currectChannelID, currentChannelID: currentChannel.id }));
   };
+
   return (
     <>
       <Modal.Header closeButton>

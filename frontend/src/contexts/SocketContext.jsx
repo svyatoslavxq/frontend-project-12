@@ -5,6 +5,7 @@ import { changeCurrentChannelID } from '../slices/channelsSlice';
 export const ApiContext = createContext({});
 
 export const useApi = () => useContext(ApiContext);
+
 export const ApiProvider = ({ children, value }) => {
   const { socket } = value;
 

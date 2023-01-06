@@ -7,6 +7,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 const Nav = () => {
   const auth = useAuth();
   const { t } = useTranslation();
+
   return (
     <Navbar className="shadow-sm navbar navbar-light">
       <Container className="container">

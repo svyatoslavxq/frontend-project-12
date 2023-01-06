@@ -15,12 +15,15 @@ const LoginForm = () => {
   const [authFailed, setAuthFailed] = useState(false);
   const { t } = useTranslation();
   const { errorToast } = useToastify();
+
   const SignupSchema = yup.object().shape({
     username: yup.string().required(t('loginPage.required')),
     password: yup.string().required(t('loginPage.required')),
   });
+
   const navigate = useNavigate();
   const authUser = useAuth();
+
   return (
     <Formik
       initialValues={

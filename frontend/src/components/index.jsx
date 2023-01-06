@@ -13,6 +13,7 @@ import { ToastifyProvider } from '../contexts/ToastifyContext';
 const ChatRoute = ({ children }) => {
   const auth = useAuth();
   const location = useLocation();
+
   return (
     auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
   );
@@ -20,6 +21,7 @@ const ChatRoute = ({ children }) => {
 
 const LoggedInRouter = () => {
   const auth = useAuth();
+
   return auth.loggedIn ? <Navigate to="/" /> : <Outlet />;
 };
 

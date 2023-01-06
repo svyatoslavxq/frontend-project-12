@@ -5,6 +5,7 @@ import imageNotFound from '../../../assets/404-page.svg';
 
 const NotFoundPage = () => {
   const { t } = useTranslation();
+
   return (
     <div className="text-center">
       <Image alt="Страница не найдена" className="img-fluid h-25" src={imageNotFound} />

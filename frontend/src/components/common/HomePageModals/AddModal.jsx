@@ -34,6 +34,7 @@ const AddModal = () => {
       .max(20, 'modal.nameLenght')
       .notOneOf(namesChannels, 'modal.duplicate'),
   });
+
   return (
     <Formik
       initialValues={

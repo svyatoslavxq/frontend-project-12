@@ -15,6 +15,7 @@ export const ToastifyProvider = ({ children }) => {
     progress: undefined,
     theme: 'light',
   });
+
   const errorToast = (messeger) => toast.error(messeger, {
     position: 'top-right',
     autoClose: 5000,
