@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { React, useEffect } from 'react';
+import { React } from 'react';
 import {
   Button, Dropdown, ButtonGroup,
 } from 'react-bootstrap';
@@ -8,29 +8,17 @@ import { useTranslation } from 'react-i18next';
 import { openModal } from '../../../../slices/modalSlice';
 import {
   changeCurrentChannelID,
-  getData,
-  updateChannels,
 } from '../../../../slices/channelsSlice';
-import { useAuth } from '../../../../contexts/AuthContext';
 
 const Channels = ({ channels, currentChannelID }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { getAuthToken } = useAuth();
   const classButton = 'w-100 rounded-0 text-start btn text-truncate btn-light';
   const activeClassButton = 'w-100 rounded-0 text-start btn text-truncate btn-secondary shadow-none';
   const classBtnGroup = 'flex-grow-0 dropdown-toggle dropdown-toggle-split btn noborder-btn btn-light';
 
-  useEffect(() => {
-    dispatch(updateChannels({
-      channels,
-      currentChannelID,
-    }));
-  }, [channels]);
-
   const changeCurrentID = (id) => {
     dispatch(changeCurrentChannelID(id));
-    dispatch(getData(getAuthToken()));
   };
 
   const openAddingModal = () => dispatch(openModal({ type: 'adding' }));

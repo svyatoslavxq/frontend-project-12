@@ -4,11 +4,11 @@ import { Modal, Button } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeModal, modalSelector } from '../../../slices/modalSlice';
-import { currentChannelsSelector, updateAfterRemove } from '../../../slices/channelsSlice';
+import { currentChannelsSelector } from '../../../slices/channelsSlice';
 import { useApi } from '../../../contexts/SocketContext';
 import { useToastify } from '../../../contexts/ToastifyContext';
 
-const RemoveModal = ({ currectChannelID }) => {
+const RemoveModal = () => {
   const { successToast } = useToastify();
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -21,9 +21,7 @@ const RemoveModal = ({ currectChannelID }) => {
     deleteChannel(currentChannel);
     dispatch(closeModal());
     successToast(t('removeChannelToast'));
-    dispatch(updateAfterRemove({ currectChannelID, currentChannelID: currentChannel.id }));
   };
-
   return (
     <>
       <Modal.Header closeButton>

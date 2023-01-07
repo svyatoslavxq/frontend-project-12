@@ -9,12 +9,11 @@ import {
   getChannels,
   getActiveChannel,
   currentChatSelector,
-  currentMessagesSelector,
   channelsErrorSelector,
 } from '../../../slices/channelsSlice';
 import { useAuth } from '../../../contexts/AuthContext';
 import HomePageModals from '../../common/HomePageModals';
-import { modalSelector } from '../../../slices/modalSlice';
+import { currentMessagesSelector } from '../../../slices/messageSlice';
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -22,9 +21,8 @@ const HomePage = () => {
   const dataChannels = useSelector(getChannels);
   const currentChannelID = useSelector(getActiveChannel);
   const currentChat = useSelector(currentChatSelector);
-  const currentMessages = useSelector(currentMessagesSelector);
+  const currentMessages = useSelector((state) => currentMessagesSelector(state, currentChannelID));
   const channelsError = useSelector(channelsErrorSelector);
-  const { type } = useSelector(modalSelector);
 
   useEffect(() => {
     dispatch(getData(getAuthToken()));
@@ -41,7 +39,7 @@ const HomePage = () => {
       <div className="row h-100 bg-white flex-md-row">
         <Channels channels={dataChannels} currentChannelID={currentChannelID} />
         <Messages messages={currentMessages} currentChannelID={currentChannelID} currentChatName={currentChat[0]?.name} />
-        <HomePageModals type={type} currentChannelID={currentChannelID} />
+        <HomePageModals currentChannelID={currentChannelID} />
       </div>
     </div>
   );

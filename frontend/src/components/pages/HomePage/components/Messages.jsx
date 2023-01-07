@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useRef, useEffect } from 'react';
 import { Formik } from 'formik';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 import filter from 'leo-profanity';
@@ -10,7 +10,6 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import { useApi } from '../../../../contexts/SocketContext';
 import {
   currentChatSelector,
-  getData,
 } from '../../../../slices/channelsSlice';
 
 const Messages = ({ messages, currentChannelID, currentChatName }) => {
@@ -20,8 +19,6 @@ const Messages = ({ messages, currentChannelID, currentChatName }) => {
   const messagesEndRef = useRef(null);
   const currentChat = useSelector(currentChatSelector);
   const ref = useRef(null);
-  const { getAuthToken } = useAuth();
-  const dispatch = useDispatch();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -56,7 +53,6 @@ const Messages = ({ messages, currentChannelID, currentChatName }) => {
             text: messageText,
           };
           sendNewMessage(messageNew);
-          dispatch(getData(getAuthToken()));
           resetForm();
         } catch (err) {
           throw new Error(err);

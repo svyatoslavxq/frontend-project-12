@@ -6,6 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import axios from 'axios';
 import routes from '../routes/routes';
+import config from '../components/common/config';
 
 export const getData = createAsyncThunk(
   'channels/getData',
@@ -24,15 +25,13 @@ export const getData = createAsyncThunk(
 );
 
 const channelsAdapter = createEntityAdapter();
-
 const initialState = {
   ...channelsAdapter.getInitialState({
     status: 'idle',
-    startStatus: false,
     messages: [],
     error: null,
   }),
-  activeChannelID: 1,
+  activeChannelID: config.INITIAL_CHANNEL_ID,
 };
 
 const channelsSlice = createSlice({
@@ -44,7 +43,10 @@ const channelsSlice = createSlice({
       activeChannelID: payload,
     }),
     addChannel: channelsAdapter.addOne,
-    removeChannel: (state, { payload }) => channelsAdapter.removeOne(state, payload.id),
+    removeChannel: (state, { payload }) => {
+      state.activeChannelID = config.INITIAL_CHANNEL_ID;
+      return channelsAdapter.removeOne(state, payload.id);
+    },
     renameChannel: (state, { payload }) => channelsAdapter.updateOne(state, {
       id: payload.id,
       changes: { name: payload.name },
@@ -52,18 +54,8 @@ const channelsSlice = createSlice({
     updateChannels: (state, { payload }) => ({
       ...state,
       activeChannelID: !payload.channels.find((x) => x.id === payload.currentChannelID)
-        ? 1 : state.activeChannelID,
+        ? config.INITIAL_CHANNEL_ID : state.activeChannelID,
     }),
-    updateAfterRemove: (state, { payload }) => {
-      const { activeChannelID, currentChannelID } = payload;
-      if (activeChannelID === currentChannelID) {
-        return ({
-          ...state,
-          activeChannelID: 1,
-        });
-      }
-      return state;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -87,21 +79,13 @@ const channelsSlice = createSlice({
 export const selectors = channelsAdapter.getSelectors(
   (state) => state.channels,
 );
-
 export const getChannels = (state) => selectors.selectAll(state);
 export const namesChannelsSelector = (state) => selectors.selectAll(state).map((it) => it.name);
 export const getActiveChannel = (state) => state.channels.activeChannelID;
-
 export const currentChatSelector = (state) => selectors
   .selectAll(state)
   .filter((channel) => channel.id === state.channels.activeChannelID);
-
-export const dataStatusSelector = (state) => state.channels.startStatus;
 export const channelsErrorSelector = (state) => state.channels.error;
-
-export const currentMessagesSelector = (state) => state.channels.messages.filter(
-  (item) => item.channelId === state.channels.activeChannelID,
-);
 export const currentChannelsSelector = (state, item) => selectors.selectAll(state)
   .find((it) => it.id === item);
 
@@ -110,7 +94,5 @@ export const {
   removeChannel,
   renameChannel,
   changeCurrentChannelID,
-  updateChannels,
-  updateAfterRemove,
 } = channelsSlice.actions;
 export default channelsSlice.reducer;
