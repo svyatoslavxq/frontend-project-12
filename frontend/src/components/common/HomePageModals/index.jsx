@@ -9,7 +9,6 @@ import { closeModal, modalSelector, modalTypes } from '../../../slices/modalSlic
 const HomePageModals = ({ currentChannelID }) => {
   const dispatch = useDispatch();
   const { type } = useSelector(modalSelector);
-
   const hideModal = () => dispatch(closeModal());
 
   return (

@@ -33,7 +33,7 @@ const HomePage = () => {
       logOut();
     }
   }, [channelsError, logOut]);
-  // debugger;
+
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
@@ -44,4 +44,5 @@ const HomePage = () => {
     </div>
   );
 };
+
 export default HomePage;

@@ -22,6 +22,7 @@ const RemoveModal = () => {
     dispatch(closeModal());
     successToast(t('removeChannelToast'));
   };
+  
   return (
     <>
       <Modal.Header closeButton>
