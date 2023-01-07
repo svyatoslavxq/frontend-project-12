@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import axios from 'axios';
 import routes from '../routes/routes';
-import config from '../components/common/config';
+import config from '../components/common/Config';
 
 export const getData = createAsyncThunk(
   'channels/getData',
