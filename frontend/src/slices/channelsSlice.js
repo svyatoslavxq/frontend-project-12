@@ -94,4 +94,5 @@ export const {
   renameChannel,
   changeCurrentChannelID,
 } = channelsSlice.actions;
+
 export default channelsSlice.reducer;
